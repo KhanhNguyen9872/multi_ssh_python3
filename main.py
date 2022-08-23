@@ -21,7 +21,7 @@ def execute_ssh(host,port,username,password,command):
    	error(host,port,"Username or Password ERROR")
    else:
       no_error(host,port,"Running....")
-      os.system(f"sshpass -p {password} ssh -o StrictHostKeyChecking=no {username}@{host} -p {port} \"{command}\"")
+      pid=os.system(f"sshpass -p {password} ssh -o StrictHostKeyChecking=no {username}@{host} -p {port} \"{command}\"")
       no_error(host,port,"Disconnected")
 
 def check_ip(host,port,username,password):
@@ -34,7 +34,7 @@ def check_ip(host,port,username,password):
    else:
       s.close()
       no_error(host,port,"Online")
-      if ("test" in sys.argv):
+      if ("--test" in sys.argv):
       	pass
       else:
           threading.Thread(target=execute_ssh, args=(host,port,username,password,command)).start()
@@ -60,20 +60,25 @@ file1.close()
 if ("--test" in sys.argv):
 	pass
 else:
-    if (sys.argv[0] == ""):
+    try:
+	    sys.argv[0] != ""
+	    command=" ".join(sys.argv)
+    except:
         command=str(input("Input command or file: "))
-    else:
-        command=" ".join(sys.argv)
     if (command == ""):
         print("Need command or bash file!")
         exit()
     if os.path.isfile(command):
-	    check=os.popen(f"curl --upload-file {command} https://temp.sh 2> /dev/null").read()
-	    if (check == ""):
-		    print(f"{bcolors.RED}[!] Network ERROR!")
-		    exit()
-	    else:
-	        command=f"cd $HOME; curl {check} -o run.sh 2> /dev/null; sudo bash ./run.sh"
+        print(f"{bcolors.CYAN} - Use file: {bcolors.YELLOW}{command}{bcolors.ENDC}")
+        print(f"{bcolors.CYAN} - Uploading to SSH....{bcolors.ENDC}")
+        check=os.popen(f"curl --upload-file {command} https://transfer.sh 2> /dev/null").read()
+        if (check == ""):
+            print(f"{bcolors.RED}[!] Network ERROR!")
+            exit()
+        else:
+	        command=f"cd \$HOME; curl {check} -o run.sh 2> /dev/null; sudo bash ./run.sh"
+    else:
+        print(f"{bcolors.CYAN} - Use command: {bcolors.YELLOW}{command}{bcolors.ENDC}")
 
 for line in Lines:
    info=line.split(" ")
