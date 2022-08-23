@@ -60,6 +60,9 @@ if ("test" in sys.argv):
 	pass
 else:
     command=str(input("Input command or file: "))
+    if (command == ""):
+        print("Need command or bash file!")
+        exit()
     if os.path.isfile(command):
 	    check=os.popen(f"curl --upload-file {command} https://temp.sh 2> /dev/null").read()
 	    if (check == ""):
