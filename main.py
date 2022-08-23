@@ -47,7 +47,8 @@ else:
     check=os.popen("which sshpass").read()
     if (check.replace("\n","") == ""):
         os.system("sudo apt update; sudo apt install sshpass -y")
-    
+
+del sys.argv[0]
 try:
     file1 = open('ip.txt', 'r')
 except FileNotFoundError as e:
@@ -56,10 +57,13 @@ except FileNotFoundError as e:
 Lines = file1.readlines()
 file1.close()
 
-if ("test" in sys.argv):
+if ("--test" in sys.argv):
 	pass
 else:
-    command=str(input("Input command or file: "))
+    if (sys.argv[0] == ""):
+        command=str(input("Input command or file: "))
+    else:
+        command=" ".join(sys.argv)
     if (command == ""):
         print("Need command or bash file!")
         exit()
