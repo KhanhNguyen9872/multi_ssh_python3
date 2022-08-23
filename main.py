@@ -8,7 +8,7 @@ def execute_ssh(host,port,username,password,command):
    	print(f"[!] {host}:{port} | Username or Password ERROR")
    else:
       print(f"{host}:{port} | Running....")
-      os.system(f"sshpass -p {password} ssh -o StrictHostKeyChecking=no {username}@{host} -p {port} {command}")
+      os.system(f"sshpass -p {password} ssh -o StrictHostKeyChecking=no {username}@{host} -p {port} \"{command}\"")
       print(f"{host}:{port} | Disconnected")
 
 def check_ip(host,port,username,password):
