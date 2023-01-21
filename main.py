@@ -1,5 +1,5 @@
 #!/bin/python3
-import threading, socket, os, sys
+import threading, socket, os, sys, time
 class bcolors:
     CYAN = '\033[96m'
     GREEN = '\033[92m'
@@ -32,8 +32,12 @@ def check_ip(host,port,username,password):
       if ("--test" in sys.argv):
       	pass
       else:
+          while is_start==0:
+            time.sleep(0.25)
           threading.Thread(target=execute_ssh, args=(host,port,username,password,command)).start()
    del s
+global is_start
+is_start=0
 if (os.name == 'nt'):
 	print("Windows is not supported!\n Use WSL/Docker or Linux to run it")
 	exit()
@@ -76,3 +80,6 @@ for line in Lines:
    info=line.split(" ")
    if (info != ""):
        threading.Thread(target=check_ip, args=(info)).start()
+print(f"{bcolors.GREEN}Process will running after 5 seconds!{bcolors.ENDC}")
+time.sleep(5)
+is_start=1
